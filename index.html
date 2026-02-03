@@ -103,9 +103,11 @@
       }
 
       #noBtn {
-        left: 62%;
         background: #e5e7eb;
         color: #111827;
+        /* On s'assure qu'il n'y a pas de transition lente sur left/top */
+        transition: transform 0.1s ease;
+        z-index: 10;
       }
 
       .hint {
@@ -278,36 +280,37 @@
         return Math.max(min, Math.min(max, n));
       }
 
-      function moveNo(px, py) {
-        const z = zone.getBoundingClientRect();
-        const b = noBtn.getBoundingClientRect();
+      function teleportNo() {
+        // On définit les limites de l'écran (avec une petite marge de 50px)
+        const padding = 50;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-        let dx = b.left + b.width / 2 - px;
-        let dy = b.top + b.height / 2 - py;
-        let mag = Math.hypot(dx, dy) || 1;
-        dx /= mag;
-        dy /= mag;
+        // Génération de coordonnées aléatoires
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
 
-        let newLeft = b.left - z.left + dx * 150;
-        let newTop = b.top - z.top + dy * 150;
+        // On passe en position "fixed" pour qu'il puisse aller n'importe où sur l'écran
+        noBtn.style.position = "fixed";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+        noBtn.style.transform = "scale(1.1)"; // Petit effet de rebond
 
-        newLeft = clamp(newLeft, 0, z.width - b.width);
-        newTop = clamp(newTop, 0, z.height - b.height);
-
-        noBtn.style.left = newLeft + "px";
-        noBtn.style.top = newTop + "px";
-        noBtn.style.transform = "none";
-
+        // On fait grossir le bouton "Yes" comme avant
         growYes();
       }
 
-      zone.addEventListener("pointermove", (e) => {
+      window.addEventListener("pointermove", (e) => {
         const b = noBtn.getBoundingClientRect();
         const d = Math.hypot(
           b.left + b.width / 2 - e.clientX,
           b.top + b.height / 2 - e.clientY,
         );
-        if (d < 140) moveNo(e.clientX, e.clientY);
+
+        // Si on s'approche à moins de 100 pixels, il se téléporte
+        if (d < 100) {
+          teleportNo();
+        }
       });
 
       noBtn.addEventListener("click", (e) => e.preventDefault());

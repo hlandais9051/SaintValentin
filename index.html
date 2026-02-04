@@ -374,7 +374,7 @@
     <button id="noBtn">Non 🙄</button>
 
     <script>
-      const targetDate = new Date("February 14, 2026 00:00:00").getTime();
+      const targetDate = new Date("February 5, 2026 00:44:00").getTime();
       const waitingScreen = document.getElementById("waiting-screen");
       const mainCard = document.getElementById("main-card");
       const timerDisplay = document.getElementById("timer");
@@ -439,7 +439,7 @@
       ];
 
       function alignInitial() {
-        if (!hasMoved) {
+        if (!hasMoved && mainCard.style.display === "block") {
           const rect = noGhost.getBoundingClientRect();
           noBtn.style.left = rect.left + "px";
           noBtn.style.top = rect.top + "px";

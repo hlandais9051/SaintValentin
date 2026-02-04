@@ -87,19 +87,29 @@
       .button-zone {
         position: relative;
         width: 100%;
-        min-height: 150px;
-        margin: 20px auto;
+        /* On réduit la hauteur sur petit écran pour éviter les trous blancs */
+        height: clamp(100px, 20vh, 180px);
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px; /* Espace entre les boutons */
-        flex-wrap: wrap; /* Permet de passer l'un sous l'autre si l'écran est trop petit */
+        gap: clamp(
+          10px,
+          3vw,
+          30px
+        ); /* L'espace entre les boutons s'adapte aussi */
+        margin: 0 auto;
       }
 
       button {
-        /* On retire position: absolute d'ici pour le mettre dynamiquement */
-        padding: 16px 24px;
-        font-size: 18px;
+        /* Taille du texte : min 16px, idéal 2.5% de la largeur, max 24px */
+        font-size: clamp(16px, 2.5vw, 24px);
+
+        /* Padding flexible basé sur la largeur de l'écran */
+        padding: clamp(10px, 2vw, 20px) clamp(15px, 4vw, 35px);
+
+        /* Largeur minimale pour garder une belle forme */
+        min-width: clamp(100px, 25vw, 160px);
+
         font-weight: 800;
         border-radius: 15px;
         border: none;
@@ -109,18 +119,22 @@
         transition:
           transform 0.12s ease,
           background 0.12s ease;
-        white-space: nowrap; /* Evite que le texte du bouton s'écrive sur 2 lignes */
+        white-space: nowrap;
       }
 
       #yesBtn {
+        left: 12%;
+        top: 42%;
         background: var(--yes);
         color: #fff;
-        z-index: 5;
       }
       #noBtn {
+        left: 60%;
+        top: 42%;
         background: #e5e7eb;
         color: #111827;
         z-index: 10;
+        transition: transform 0.1s ease;
       }
 
       .result {
@@ -225,33 +239,25 @@
 
       /* ---------- TELEPORT LOGIC ---------- */
       function teleportNo() {
-        const card = document.querySelector(".card");
+        const padding = 50;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-        // Au premier mouvement, on passe le bouton en absolute pour qu'il puisse bouger
-        if (noBtn.style.position !== "absolute") {
-          noBtn.style.position = "absolute";
-        }
-
-        // On calcule les limites de la carte (cadre blanc)
-        const padding = 20;
-        const maxX = card.clientWidth - noBtn.offsetWidth - padding;
-        const maxY = card.clientHeight - noBtn.offsetHeight - padding;
-
-        // On génère une position aléatoire DANS la carte
         const randomX = Math.floor(Math.random() * maxX);
         const randomY = Math.floor(Math.random() * maxY);
 
+        noBtn.style.position = "fixed";
         noBtn.style.left = randomX + "px";
         noBtn.style.top = randomY + "px";
 
-        // Ton code pour les phrases et la taille du texte
         if (currentPhraseIndex < phrases.length) {
           hint.innerText = phrases[currentPhraseIndex];
-          currentPhraseIndex++;
-        } else {
+          currentPhraseIndex = currentPhraseIndex + 1;
+        } else if (currentPhraseIndex >= phrases.length) {
+          if (i > 30) i = 30;
           hint.innerText = "Tu ne m'aimes pas ? 😭";
           hint.style.fontSize = `${i}px`;
-          i += 2;
+          i++;
           currentPhraseIndex++;
         }
 

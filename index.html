@@ -1,124 +1,136 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Will you be my Valentine?</title>
+    <title>Veux-tu être ma Valentine ?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <style>
       :root {
         --bg1: #ffd6e7;
         --bg2: #ffeef6;
-        --card: #ffffffcc;
+        --card: #ffffff;
         --yes: #ff3b7a;
       }
 
       * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
       }
 
       body {
-        margin: 0;
-        min-height: 100svh;
-        display: grid;
-        place-items: center;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         background: radial-gradient(circle at top, var(--bg2), var(--bg1));
         font-family: system-ui, sans-serif;
         overflow: hidden;
-        padding: 16px;
+        padding: 15px;
       }
 
       .card {
-        position: relative;
-        width: 95vw;
-        max-width: 480px;
-        min-height: 550px;
-        padding: 26px 22px;
+        position: relative; /* CRUCIAL : Définit la zone limite pour le bouton Non */
+        width: 100%;
+        max-width: 400px;
         background: var(--card);
-        backdrop-filter: blur(10px);
-        border-radius: 22px;
+        border-radius: 30px;
+        padding: 30px 20px;
         text-align: center;
-        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
-        overflow: hidden; /* Empêche le bouton de sortir du cadre blanc */
+        align-items: center;
+        min-height: 550px;
       }
 
       .img-container {
         position: relative;
-        width: fit-content;
-        margin: 0 auto 15px;
+        margin-bottom: 20px;
       }
 
       .custom-img {
-        width: min(250px, 60vw);
-        border-radius: 15px;
-        display: block;
+        width: 280px;
+        height: 320px;
+        object-fit: cover;
+        border-radius: 20px;
+      }
+
+      .heart-overlay {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 80px;
+        filter: drop-shadow(0 5px 10px rgba(255, 59, 122, 0.3));
       }
 
       h1 {
-        font-size: clamp(22px, 5vw, 32px);
-        margin: 12px 0 18px;
+        font-size: 24px;
+        color: #111;
+        margin-bottom: 30px;
+        padding: 0 10px;
       }
 
       .button-zone {
-        position: relative;
         width: 100%;
-        height: 150px; /* Zone d'évolution */
+        height: 120px; /* Espace réservé pour les boutons */
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
+        position: relative;
       }
 
       button {
-        padding: clamp(10px, 2vw, 18px) clamp(15px, 4vw, 30px);
-        font-size: clamp(16px, 2.5vw, 22px);
-        font-weight: 800;
+        padding: 12px 25px;
+        font-size: 18px;
+        font-weight: bold;
         border-radius: 15px;
         border: none;
         cursor: pointer;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
-        user-select: none;
         transition:
-          background 0.2s ease,
-          transform 0.1s ease;
+          transform 0.1s ease,
+          background 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
         -webkit-tap-highlight-color: transparent;
       }
 
       #yesBtn {
         background: var(--yes);
-        color: #fff;
-        position: relative;
-        z-index: 1; /* Derrière le bouton Non */
+        color: white;
+        z-index: 10;
       }
 
       #noBtn {
-        background: #e5e7eb;
-        color: #111827;
-        position: relative;
-        z-index: 999; /* Toujours devant */
+        background: #eef1f5;
+        color: #333;
+        z-index: 100; /* Toujours au-dessus du bouton Oui */
         white-space: nowrap;
         touch-action: none;
       }
 
       .hint {
+        margin-top: 15px;
         font-weight: bold;
-        margin-top: 10px;
-        min-height: 1.5em;
+        color: #333;
+        font-size: 16px;
       }
 
-      .result {
+      #result {
         display: none;
+        width: 100%;
+        height: 100%;
       }
+
       .fireworks {
         width: 100%;
         max-width: 300px;
-        border-radius: 15px;
+        border-radius: 20px;
         margin-top: 20px;
       }
     </style>
@@ -127,86 +139,99 @@
     <main class="card">
       <div id="main-content">
         <div class="img-container">
-          <img src="IMG_8374.JPG" alt="Valentine" class="custom-img" />
+          <img src="IMG_8374.JPG" alt="Nous" class="custom-img" />
+          <svg
+            class="heart-overlay"
+            viewBox="0 0 100 100"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M50 85 C50 75 20 65 20 40 C20 25 35 15 50 30 C65 15 80 25 80 40 C80 65 50 75 50 85Z"
+              fill="#ff3b7a"
+            />
+          </svg>
         </div>
 
         <h1>Charlise, veux-tu être ma Valentine ?</h1>
 
-        <section class="button-zone">
+        <div class="button-zone" id="zone">
           <button id="yesBtn">Evidemment</button>
           <button id="noBtn">Non 🙄</button>
-        </section>
+        </div>
 
         <div class="hint" id="hint"></div>
       </div>
 
-      <section class="result" id="result">
+      <div id="result">
         <h2>YOUPIIIIIIIII ! 🎉</h2>
         <img
           class="fireworks"
           src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3g2bXN3cTB6dWZyaWswNHk2aGJzdm14azg1NDRucDJuZWFzMm8xdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l6jTwS2sCZ1ztTwgL8/200w.webp"
         />
-      </section>
+      </div>
     </main>
 
     <script>
       const yesBtn = document.getElementById("yesBtn");
       const noBtn = document.getElementById("noBtn");
-      const result = document.getElementById("result");
-      const mainContent = document.getElementById("main-content");
       const hint = document.getElementById("hint");
       const card = document.querySelector(".card");
+      const mainContent = document.getElementById("main-content");
+      const result = document.getElementById("result");
 
       let yesScale = 1;
       let currentPhraseIndex = 0;
-      let fontSizeHint = 18;
+      let fontSizeHint = 16;
+
       const phrases = [
         "Oups ! 🏃‍♂️",
         "Raté ! 😜",
-        "Essaie encore... 🖱️",
+        "Même pas en rêve ! ✨",
         "Allez dis oui ! ❤️",
         "Tu ne m'aimes pas ? 😭",
       ];
 
       function teleportNo() {
-        // Force le passage en absolute pour bouger librement
+        // Indispensable pour que le bouton bouge par rapport à la CARTE blanche
         if (noBtn.style.position !== "absolute") {
           noBtn.style.position = "absolute";
         }
 
-        const padding = 30;
-        // CALCUL CRUCIAL : On reste dans les limites de la CARTE (cadre blanc)
+        // On définit des limites strictes pour rester dans la carte blanche
+        const padding = 20;
         const maxX = card.clientWidth - noBtn.offsetWidth - padding;
         const maxY = card.clientHeight - noBtn.offsetHeight - padding;
 
+        // On génère une position aléatoire DANS ces limites
         const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
         const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-        noBtn.style.left = `${randomX}px`;
-        noBtn.style.top = `${randomY}px`;
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
 
-        // Mise à jour de l'indice
+        // Gérer le texte d'indice
         if (currentPhraseIndex < phrases.length) {
           hint.innerText = phrases[currentPhraseIndex];
           currentPhraseIndex++;
         } else {
           fontSizeHint += 2;
-          hint.style.fontSize = `${fontSizeHint}px`;
+          hint.style.fontSize = fontSizeHint + "px";
         }
 
-        // Grossissement du OUI
+        // Faire grossir le bouton OUI
         yesScale = Math.min(3, yesScale + 0.15);
         yesBtn.style.transform = `scale(${yesScale})`;
       }
 
-      // Détection pour Souris ET Mobile
+      // Détection pour Souris et Tactile
       const checkDistance = (x, y) => {
-        const b = noBtn.getBoundingClientRect();
-        const dist = Math.hypot(
-          b.left + b.width / 2 - x,
-          b.top + b.height / 2 - y,
-        );
-        if (dist < 80) teleportNo();
+        const rect = noBtn.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const distance = Math.hypot(centerX - x, centerY - y);
+
+        // Si on approche à moins de 70 pixels, on s'enfuit !
+        if (distance < 70) teleportNo();
       };
 
       window.addEventListener("mousemove", (e) =>
@@ -216,7 +241,7 @@
         checkDistance(e.touches[0].clientX, e.touches[0].clientY),
       );
 
-      // Sécurité : si elle clique quand même sur le Non
+      // Si par miracle elle arrive à cliquer sur "Non"
       noBtn.addEventListener("click", (e) => {
         e.preventDefault();
         teleportNo();

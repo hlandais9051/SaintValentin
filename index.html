@@ -127,14 +127,13 @@
         top: 42%;
         background: var(--yes);
         color: #fff;
-        z-index: 1;
       }
       #noBtn {
         left: 60%;
         top: 42%;
         background: #e5e7eb;
         color: #111827;
-        z-index: 100;
+        z-index: 999;
         transition: transform 0.1s ease;
       }
 
@@ -240,11 +239,6 @@
 
       /* ---------- TELEPORT LOGIC ---------- */
       function teleportNo() {
-        if (noBtn.style.position !== "absolute") {
-          noBtn.style.position = "absolute";
-        }
-        noBtn.style.zIndex = "999";
-        yesBtn.style.zIndex = "1";
         const padding = 50;
         const maxX = window.innerWidth - noBtn.offsetWidth - padding;
         const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -252,6 +246,7 @@
         const randomX = Math.floor(Math.random() * maxX);
         const randomY = Math.floor(Math.random() * maxY);
 
+        noBtn.style.position = "fixed";
         noBtn.style.left = randomX + "px";
         noBtn.style.top = randomY + "px";
 

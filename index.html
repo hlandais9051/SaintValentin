@@ -1,145 +1,176 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>Veux-tu être ma Valentine ?</title>
+    <title>Will you be my Valentine?</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
     <style>
       :root {
         --bg1: #ffd6e7;
         --bg2: #ffeef6;
-        --card: #ffffff;
+        --card: #ffffffcc;
         --yes: #ff3b7a;
       }
 
       * {
         box-sizing: border-box;
-        margin: 0;
-        padding: 0;
       }
 
       body {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        margin: 0;
+        min-height: 100svh;
+        display: grid;
+        place-items: center;
         background: radial-gradient(circle at top, var(--bg2), var(--bg1));
         font-family: system-ui, sans-serif;
         overflow: hidden;
-        padding: 15px;
+        padding: 16px;
       }
 
       .card {
-        position: relative; /* CRUCIAL : Définit la zone limite pour le bouton Non */
-        width: 100%;
-        max-width: 400px;
+        position: relative; /* Indispensable pour contenir le bouton No */
+        width: 92vw;
+        max-width: 480px;
+        min-height: 500px; /* Assure une taille minimale sur mobile */
+        padding: 26px 22px;
         background: var(--card);
-        border-radius: 30px;
-        padding: 30px 20px;
+        backdrop-filter: blur(10px);
+        border-radius: 22px;
         text-align: center;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.15);
         display: flex;
         flex-direction: column;
-        align-items: center;
-        min-height: 550px;
+        justify-content: center;
+        overflow: hidden; /* Empêche le bouton de sortir du cadre blanc */
       }
 
       .img-container {
         position: relative;
-        margin-bottom: 20px;
+        width: fit-content;
+        margin: 0 auto 15px;
       }
 
       .custom-img {
-        width: 280px;
-        height: 320px;
-        object-fit: cover;
-        border-radius: 20px;
+        width: min(250px, 60vw);
+        border-radius: 15px;
+        display: block;
       }
 
       .heart-overlay {
         position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 80px;
-        filter: drop-shadow(0 5px 10px rgba(255, 59, 122, 0.3));
+        top: 5%;
+        left: 100%;
+        transform: translate(-50%, -50%);
+        width: 60%;
+        pointer-events: none;
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
       }
 
       h1 {
-        font-size: 24px;
-        color: #111;
-        margin-bottom: 30px;
-        padding: 0 10px;
+        font-size: clamp(22px, 5vw, 32px);
+        margin: 12px 0 18px;
+        line-height: 1.2;
       }
 
       .button-zone {
+        position: relative;
         width: 100%;
-        height: 120px; /* Espace réservé pour les boutons */
+        /* On réduit la hauteur sur petit écran pour éviter les trous blancs */
+        height: clamp(100px, 20vh, 180px);
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 15px;
-        position: relative;
+        gap: clamp(
+          10px,
+          3vw,
+          30px
+        ); /* L'espace entre les boutons s'adapte aussi */
+        margin: 0 auto;
       }
 
       button {
-        padding: 12px 25px;
-        font-size: 18px;
-        font-weight: bold;
+        /* Taille du texte : min 16px, idéal 2.5% de la largeur, max 24px */
+        font-size: clamp(16px, 2.5vw, 24px);
+
+        /* Padding flexible basé sur la largeur de l'écran */
+        padding: clamp(10px, 2vw, 20px) clamp(15px, 4vw, 35px);
+
+        /* Largeur minimale pour garder une belle forme */
+        min-width: clamp(100px, 25vw, 160px);
+
+        font-weight: 800;
         border-radius: 15px;
         border: none;
         cursor: pointer;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+        user-select: none;
         transition:
-          transform 0.1s ease,
-          background 0.3s;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-        -webkit-tap-highlight-color: transparent;
+          transform 0.12s ease,
+          background 0.12s ease;
+        white-space: nowrap;
       }
 
       #yesBtn {
+        /* On s'assure qu'il reste à sa place même si l'autre s'en va */
+        position: relative;
         background: var(--yes);
-        color: white;
-        z-index: 10;
+        color: #fff;
+        z-index: 5;
       }
 
       #noBtn {
-        background: #eef1f5;
-        color: #333;
-        z-index: 100; /* Toujours au-dessus du bouton Oui */
+        background: #e5e7eb;
+        color: #111827;
+        z-index: 10;
         white-space: nowrap;
-        touch-action: none;
       }
 
       .hint {
-        margin-top: 15px;
         font-weight: bold;
-        color: #333;
-        font-size: 16px;
+        color: #000;
+        margin-top: 10px;
+        min-height: 1.2em;
       }
 
-      #result {
+      .result {
         display: none;
-        width: 100%;
-        height: 100%;
+        animation: pop 0.35s ease;
       }
 
       .fireworks {
         width: 100%;
         max-width: 300px;
-        border-radius: 20px;
-        margin-top: 20px;
+        border-radius: 15px;
+        margin: 15px auto;
+      }
+
+      @keyframes pop {
+        0% {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
       }
     </style>
   </head>
   <body>
+    <canvas
+      id="confettiCanvas"
+      style="position: fixed; inset: 0; pointer-events: none; z-index: 9999"
+    ></canvas>
+
     <main class="card">
       <div id="main-content">
         <div class="img-container">
-          <img src="IMG_8374.JPG" alt="Nous" class="custom-img" />
+          <img src="IMG_8374.JPG" alt="Valentine" class="custom-img" />
           <svg
             class="heart-overlay"
             viewBox="0 0 100 100"
@@ -147,101 +178,107 @@
           >
             <path
               d="M50 85 C50 75 20 65 20 40 C20 25 35 15 50 30 C65 15 80 25 80 40 C80 65 50 75 50 85Z"
-              fill="#ff3b7a"
+              fill="#ff1f68"
             />
           </svg>
         </div>
 
         <h1>Charlise, veux-tu être ma Valentine ?</h1>
 
-        <div class="button-zone" id="zone">
+        <section class="button-zone" id="zone">
           <button id="yesBtn">Evidemment</button>
           <button id="noBtn">Non 🙄</button>
-        </div>
+        </section>
 
         <div class="hint" id="hint"></div>
       </div>
 
-      <div id="result">
+      <section class="result" id="result">
         <h2>YOUPIIIIIIIII ! 🎉</h2>
         <img
           class="fireworks"
           src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3g2bXN3cTB6dWZyaWswNHk2aGJzdm14azg1NDRucDJuZWFzMm8xdyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l6jTwS2sCZ1ztTwgL8/200w.webp"
+          alt="Success"
         />
-      </div>
+      </section>
     </main>
 
     <script>
       const yesBtn = document.getElementById("yesBtn");
       const noBtn = document.getElementById("noBtn");
+      const result = document.getElementById("result");
+      const mainContent = document.getElementById("main-content");
       const hint = document.getElementById("hint");
       const card = document.querySelector(".card");
-      const mainContent = document.getElementById("main-content");
-      const result = document.getElementById("result");
 
       let yesScale = 1;
       let currentPhraseIndex = 0;
       let fontSizeHint = 16;
 
       const phrases = [
-        "Oups ! 🏃‍♂️",
-        "Raté ! 😜",
+        "Oups, trop lent ! 🏃‍♂️",
+        "Tu as raté ! 😜",
         "Même pas en rêve ! ✨",
-        "Allez dis oui ! ❤️",
-        "Tu ne m'aimes pas ? 😭",
+        "Essaie encore... 🖱️",
+        "Je vais me vexer... 😢",
+        "Allez, dis oui ! ❤️",
       ];
 
       function teleportNo() {
-        // Indispensable pour que le bouton bouge par rapport à la CARTE blanche
+        // 1. On s'assure que le bouton devient "libre" de bouger sur toute la carte
         if (noBtn.style.position !== "absolute") {
           noBtn.style.position = "absolute";
+          noBtn.style.zIndex = "1000"; // Passe devant tout le reste
         }
 
-        // On définit des limites strictes pour rester dans la carte blanche
         const padding = 20;
+
+        // 2. On calcule les limites REELLES du cadre blanc (card)
+        // On utilise clientWidth pour ignorer les bordures/scrollbars
         const maxX = card.clientWidth - noBtn.offsetWidth - padding;
         const maxY = card.clientHeight - noBtn.offsetHeight - padding;
 
-        // On génère une position aléatoire DANS ces limites
+        // 3. On génère une position aléatoire sécurisée
         const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
         const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
 
-        noBtn.style.left = randomX + "px";
-        noBtn.style.top = randomY + "px";
+        // 4. On applique les coordonnées
+        noBtn.style.left = `${randomX}px`;
+        noBtn.style.top = `${randomY}px`;
 
-        // Gérer le texte d'indice
+        // --- Gestion du texte (indice) ---
         if (currentPhraseIndex < phrases.length) {
           hint.innerText = phrases[currentPhraseIndex];
           currentPhraseIndex++;
         } else {
+          hint.innerText = "Tu ne m'aimes pas ? 😭";
           fontSizeHint += 2;
-          hint.style.fontSize = fontSizeHint + "px";
+          hint.style.fontSize = `${fontSizeHint}px`;
         }
 
-        // Faire grossir le bouton OUI
-        yesScale = Math.min(3, yesScale + 0.15);
-        yesBtn.style.transform = `scale(${yesScale})`;
+        growYes();
       }
 
-      // Détection pour Souris et Tactile
-      const checkDistance = (x, y) => {
-        const rect = noBtn.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const distance = Math.hypot(centerX - x, centerY - y);
-
-        // Si on approche à moins de 70 pixels, on s'enfuit !
-        if (distance < 70) teleportNo();
+      // Détection de proximité (marche aussi sur mobile avec le toucher)
+      const handleInteraction = (clientX, clientY) => {
+        const b = noBtn.getBoundingClientRect();
+        const d = Math.hypot(
+          b.left + b.width / 2 - clientX,
+          b.top + b.height / 2 - clientY,
+        );
+        // Si on s'approche à moins de 80 pixels (souris ou doigt)
+        if (d < 80) teleportNo();
       };
 
-      window.addEventListener("mousemove", (e) =>
-        checkDistance(e.clientX, e.clientY),
-      );
-      window.addEventListener("touchstart", (e) =>
-        checkDistance(e.touches[0].clientX, e.touches[0].clientY),
-      );
+      window.addEventListener("mousemove", (e) => {
+        handleInteraction(e.clientX, e.clientY);
+      });
 
-      // Si par miracle elle arrive à cliquer sur "Non"
+      // Événement pour le Tactile (Mobile)
+      window.addEventListener("touchstart", (e) => {
+        handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+      });
+
       noBtn.addEventListener("click", (e) => {
         e.preventDefault();
         teleportNo();

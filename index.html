@@ -264,13 +264,31 @@
         growYes();
       }
 
-      window.addEventListener("pointermove", (e) => {
+      // Fonction qui vérifie la distance et téléporte
+      const handleInteraction = (clientX, clientY) => {
         const b = noBtn.getBoundingClientRect();
         const d = Math.hypot(
-          b.left + b.width / 2 - e.clientX,
-          b.top + b.height / 2 - e.clientY,
+          b.left + b.width / 2 - clientX,
+          b.top + b.height / 2 - clientY,
         );
-        if (d < 100) teleportNo();
+        // Si on s'approche à moins de 80 pixels (souris ou doigt)
+        if (d < 80) teleportNo();
+      };
+
+      // Événement pour la Souris
+      window.addEventListener("mousemove", (e) => {
+        handleInteraction(e.clientX, e.clientY);
+      });
+
+      // Événement pour le Tactile (Mobile)
+      window.addEventListener("touchstart", (e) => {
+        handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+      });
+
+      // Sécurité ultime : si elle arrive quand même à cliquer
+      noBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        teleportNo();
       });
 
       /* ---------- SUCCESS ---------- */

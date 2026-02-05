@@ -374,7 +374,7 @@
     <button id="noBtn">Non 🙄</button>
 
     <script>
-      const targetDate = new Date("February 14, 2026 00:00:00").getTime();
+      const targetDate = new Date("February 14, 2026 12:30:00").getTime();
       const waitingScreen = document.getElementById("waiting-screen");
       const mainCard = document.getElementById("main-card");
       const timerDisplay = document.getElementById("timer");
@@ -400,7 +400,8 @@
         if (diff <= 0) {
           waitingScreen.style.display = "none";
           mainCard.style.display = "block";
-          alignInitial();
+          // On laisse 50ms au navigateur pour rendre le DOM visible
+          setTimeout(alignInitial, 50);
           return true;
         }
 
@@ -439,8 +440,11 @@
       ];
 
       function alignInitial() {
-        if (!hasMoved && mainCard.style.display === "block") {
+        // On vérifie juste si le bouton n'a pas déjà commencé à s'enfuir
+        if (!hasMoved) {
           const rect = noGhost.getBoundingClientRect();
+          if (rect.left === 0 && rect.top === 0) return; // Sécurité si l'élément n'est pas encore visible
+
           noBtn.style.left = rect.left + "px";
           noBtn.style.top = rect.top + "px";
           noBtn.style.width = noGhost.offsetWidth + "px";

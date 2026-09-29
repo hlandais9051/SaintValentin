@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jeu des Indices — Voyage Mystère</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-image: url("photo14.png");
+        background-position: center;
+        background-size: cover;
+      }
+      .chat-container {
+        width: 100%;
+        max-width: 880px;
+        height: 90vh;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .chat-header {
+        background: rgb(255, 153, 0);
+        color: white;
+        padding: 18px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.5em;
+      }
+      .countdown-badge {
+        position: absolute;
+        top: 40px;
+        right: 20px;
+        background: rgb(255, 153, 0);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 1em;
+        text-align: right;
+      }
+      .chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .message {
+        max-width: 60%;
+        padding: 10px 14px;
+        border-radius: 18px;
+        font-size: 1em;
+        line-height: 1.4;
+      }
+      .bot {
+        background: #f1f0f0;
+        color: #333;
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+      .user {
+        background: rgb(255, 153, 0);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+      .chat-input {
+        display: flex;
+        padding: 10px;
+        border-top: 1px solid #ddd;
+        background: #fff;
+      }
+      input {
+        flex: 1;
+        border: 1px solid #ccc;
+        padding: 12px;
+        border-radius: 20px;
+        outline: none;
+        font-size: 0.9em;
+      }
+      button {
+        background: rgb(255, 153, 0);
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        margin-left: 8px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div id="countdown" class="countdown-badge">⏳ Calcul du décompte...</div>
+      <div class="chat-header">🧭 Quiz Destination Mystère</div>
+      <div class="chat-messages" id="messages">
+        <div class="message bot">
+          Coucou Mon Coeur ❤️ !<br />
+          Si cela t'intéresse pose-moi tes questions pour deviner où nous
+          partons du 25 au 30 octobre ! ✈️
+        </div>
+      </div>
+      <div class="chat-input">
+        <input
+          type="text"
+          id="userInput"
+          placeholder="Pose une question pour essayer de trouver la destination..."
+          onkeydown="if (event.key === 'Enter') sendMessage();"
+          autofocus
+        />
+        <button onclick="sendMessage()">Envoyer</button>
+      </div>
+    </div>
+
+    <script>
+      function sendMessage() {
+        const input = document.getElementById("userInput");
+        const text = input.value.trim().toLowerCase();
+        if (!text) return;
+        addMessage(input.value, "user");
+        input.value = "";
+        input.focus();
+
+        setTimeout(() => {
+          let reply = getBotReply(text);
+          addMessage(reply, "bot");
+        }, 600);
+      }
+
+      function addMessage(text, sender) {
+        const messages = document.getElementById("messages");
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerHTML = text;
+        messages.appendChild(msgDiv);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      function getBotReply(rawInput) {
+        // On passe en minuscules ET on retire tous les accents pour éviter les râtés
+        const q = rawInput
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+
+        // Photo de la nourriture
+        if (
+          (q.includes("photo") || q.includes("image")) &&
+          (q.includes("manger") ||
+            q.includes("nourriture") ||
+            q.includes("plat"))
+        ) {
+          return (
+            "Attention les yeux, voilà à quoi ressemblent les petits plats locaux ! 😋<br><br>" +
+            "<img src='photo6.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo7.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo8.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>"
+          );
+        }
+
+        // Photo de l'hébergement
+        if (
+          (q.includes("photo") || q.includes("image")) &&
+          (q.includes("appartement") ||
+            q.includes("logement") ||
+            q.includes("chambre"))
+        ) {
+          return (
+            "Voici un aperçu de notre petit appartement 🏠<br><br>" +
+            "<img src='photo9.jpg' style='width: 100%; border-radius: 10px; margin-bottom: 6px;'>" +
+            "<img src='photo10.jpg' style='width: 100%; border-radius: 10px; margin-bottom: 6px;'>" +
+            "<img src='photo11.jpg' style='width: 100%; border-radius: 10px; margin-bottom: 6px;'>" +
+            "<img src='photo12.jpg' style='width: 100%; border-radius: 10px; margin-bottom: 6px;'>"
+          );
+        }
+
+        // Photo générale / paysages
+        if (
+          q.includes("photo") ||
+          q.includes("image") ||
+          q.includes("apercu")
+        ) {
+          return (
+            "Voici des indices visuels... mais sans trop en dévoiler ! 🤫<br><br>" +
+            "<img src='photo1.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo2.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo3.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo4.jpg' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>" +
+            "<img src='photo5.avif' style='width: 100%; border-radius: 8px; margin-bottom: 6px;'>"
+          );
+        }
+
+        // MÉTÉO / CLIMAT
+        if (
+          q.includes("meteo") ||
+          q.includes("climat") ||
+          q.includes("temperature") ||
+          q.includes("chaud") ||
+          q.includes("froid") ||
+          q.includes("saison") ||
+          q.includes("quel temps") ||
+          q.includes("beau temps") ||
+          q.includes("beau")
+        ) {
+          return "En fin octobre, attends-toi à un doux climat méditerranéen : environ 18°C à 22°C la journée, un beau soleil mais des soirées fraîches ! ☀️🍂";
+        }
+
+        // TENUE / VALISE
+        if (
+          q.includes("habill") ||
+          q.includes("vetement") ||
+          q.includes("tenue") ||
+          q.includes("valise") ||
+          q.includes("mettre") ||
+          q.includes("chaussure") ||
+          q.includes("habit")
+        ) {
+          return "Prévois des tenues de mi-saison : t-shirts, pulls légers, une veste pour le soir et surtout des chaussures confortables pour bien marcher en ville et sur les pavés ! 👟🧥";
+        }
+
+        // VOL / AVION
+        if (
+          q.includes("vol") ||
+          q.includes("avion") ||
+          q.includes("escale") ||
+          q.includes("compagnie") ||
+          (q.includes("trajet") && !q.includes("voiture")) ||
+          q.includes("combien de temps")
+        ) {
+          return "C'est un vol à une escale ! Environ 2h de trajet depuis Nantes. ✈️";
+        }
+
+        // HORAIRES / DÉPART
+        if (
+          q.includes("heure") ||
+          q.includes("depart") ||
+          q.includes("quand") ||
+          q.includes("rdv") ||
+          q.includes("rendez-vous") ||
+          q.includes("date")
+        ) {
+          return "Le départ se fera le 25 à 11h45. Prépare-toi à décoller de la maison à 9h ⏰";
+        }
+
+        // NOURRITURE
+        if (
+          q.includes("mang") ||
+          q.includes("nourriture") ||
+          q.includes("plat") ||
+          q.includes("cuisine") ||
+          q.includes("resto") ||
+          q.includes("restaurant") ||
+          q.includes("repas") ||
+          q.includes("vegetarien")
+        ) {
+          return "On y mange des spécialités de tradition méditerranéenne : ingrédients frais, légumes gorgés de soleil, produits laitiers et herbes aromatiques ! 🥗🍅🧀";
+        }
+
+        // MONNAIE / ARGENT
+        if (
+          q.includes("monnaie") ||
+          q.includes("paye") ||
+          q.includes("argent") ||
+          (q.includes("euro") && !q.includes("europe")) ||
+          q.includes("prix") ||
+          q.includes("cout")
+        ) {
+          return "L'Euro n'est pas la monnaie officielle locale, mais la vie sur place y est très accessible ! 💸";
+        }
+
+        // ACTIVITÉS / PROGRAMME
+        if (
+          q.includes("activite") ||
+          q.includes("visiter") ||
+          q.includes("fai") ||
+          q.includes("feron") ||
+          q.includes("voi") ||
+          q.includes("verr") ||
+          q.includes("programme") ||
+          q.includes("monument") ||
+          q.includes("musee")
+        ) {
+          return "Au programme : des bunkers transformés en musées art-histoire, une montée en téléphérique au sommet d'une montagne, et la visite d'un quartier super animé ! 🏰🚠";
+        }
+
+        // PLAGE / MER
+        if (
+          q.includes("plage") ||
+          q.includes("mer") ||
+          q.includes("baignade") ||
+          q.includes("sable") ||
+          q.includes("cote")
+        ) {
+          return "La plage la plus proche se trouve à environ 35 à 45 minutes de route de notre appartement. C'est accessible pour aller voir la mer ou se promener ! 🌊";
+        }
+
+        // APPARTEMENT / LOGEMENT
+        if (
+          q.includes("appartement") ||
+          q.includes("logement") ||
+          q.includes("hebergement") ||
+          q.includes("airbnb") ||
+          q.includes("hotel") ||
+          q.includes("chambre") ||
+          q.includes("boho") ||
+          q.includes("dorm") ||
+          q.includes("dort")
+        ) {
+          return "On loge dans un appartement situé en plein centre-ville ! Tout est accessible à 5 minutes à pied (place centrale, restos, bars). Tu peux demander des photos si tu le souhaite ! 🏠✨";
+        }
+
+        // VILLE / CAPITALE
+        if (
+          q.includes("ville") ||
+          q.includes("capitale") ||
+          q.includes("taille")
+        ) {
+          return "C'est une capitale très vivante, colorée et à taille humaine, où beaucoup de choses se font très bien à pied ! 🏙️";
+        }
+
+        // HABITANTS / CULTURE
+        if (
+          q.includes("habitant") ||
+          q.includes("population") ||
+          q.includes("gens") ||
+          q.includes("locaux") ||
+          q.includes("accueil")
+        ) {
+          return "Les gens locaux sont réputés pour leur sens de l'hospitalité légendaire ! Attention si tu poses une question sur place : traditionnellement, hocher la tête de haut en bas veut dire 'non', et secouer la tête de gauche à droite veut dire 'oui' ! 🫣";
+        }
+
+        // LANGUE
+        if (
+          q.includes("langue") ||
+          q.includes("parl") ||
+          q.includes("communication") ||
+          q.includes("langage") ||
+          q.includes("anglais") ||
+          q.includes("italien")
+        ) {
+          return "On y parle une langue européenne totalement unique qui ne ressemble à aucune autre ! Mais pas de panique, ils parlent très bien anglais et souvent italien. 🗣️";
+        }
+
+        // TRANSPORTS
+        if (
+          q.includes("transport") ||
+          q.includes("bus") ||
+          q.includes("metro") ||
+          q.includes("train") ||
+          q.includes("taxi") ||
+          q.includes("voiture")
+        ) {
+          return "Depuis l'appartement, tout le centre-ville se visite très bien à pied ! Pour les excursions plus loin, on prendra la voiture ou les minibus locaux. 🚗🚶‍♂️";
+        }
+
+        // DRAPEAU / SYMBOLE
+        if (
+          q.includes("drapeau") ||
+          q.includes("symbole") ||
+          q.includes("embleme") ||
+          q.includes("couleur")
+        ) {
+          return "La couleur principale du drapeau de notre destination est le rouge vif ! 🔴";
+        }
+
+        // NOM DIRECT
+        if (
+          q.includes("nom") ||
+          q.includes("destination") ||
+          q.includes("ou est ce") ||
+          q.includes("ou on va") ||
+          q.includes("trouve") ||
+          q.includes("ou va t on") ||
+          q.includes("ou partons") ||
+          q.includes("ou allons")
+        ) {
+          return "Bonne tentative ! Mais je ne peux pas te donner le nom exact de la destination pour ne pas gâcher la surprise. Continue à poser des questions pour deviner ! 🕵️‍♂️";
+        }
+
+        // SECRET
+        if (
+          q.includes("bonjour") ||
+          q.includes("salut") ||
+          q.includes("coucou") ||
+          q.includes("hello") ||
+          q.includes("chat")
+        ) {
+          return (
+            "Coucou Mon Coeur ❤️ !<br>" +
+            "Pose-moi une question pour essayer de deviner la destination mystère.<br>" +
+            "Bien sûr, le but n'est pas que tu trouves mais de te donner envie ! 😉"
+          );
+        }
+
+        return (
+          "Désolé, je ne peux pas te répondre !<br>" +
+          "- Soit cela te donnerait trop d'indices.<br>" +
+          "- Soit je n'ai pas la réponse dans mes données.<br>" +
+          "- Soit je n'ai pas compris ta question.<br>" +
+          "Pose-moi une autre question ! 😉"
+        );
+      }
+      const targetDate = new Date("2026-10-25T11:45:00").getTime();
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown").innerHTML = `⏳ J-${days}`;
+        if (distance < 24 * 60 * 60 * 1000) {
+          document.getElementById("countdown").innerHTML =
+            `🚀 Départ imminant ! <br> ${hours}h ${minutes}m ${seconds}s`;
+          return;
+        }
+      }
+
+      // Mettre à jour le compteur toutes les secondes
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+    </script>
+  </body>
+</html>

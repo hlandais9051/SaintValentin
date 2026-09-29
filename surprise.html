@@ -188,9 +188,12 @@
 
         // Photo générale / paysages
         if (
-          q.includes("photo") ||
-          q.includes("image") ||
-          q.includes("apercu")
+          (q.includes("photo") || q.includes("image")) &&
+          (q.includes("paysage") ||
+            q.includes("ville") ||
+            q.includes("montagne") ||
+            q.includes("mer") ||
+            q.includes("plage"))
         ) {
           return (
             "Voici des indices visuels... mais sans trop en dévoiler ! 🤫<br><br>" +
@@ -348,9 +351,10 @@
           q.includes("communication") ||
           q.includes("langage") ||
           q.includes("anglais") ||
-          q.includes("italien")
+          q.includes("francais") ||
+          q.includes("espagnol")
         ) {
-          return "On y parle une langue européenne totalement unique qui ne ressemble à aucune autre ! Mais pas de panique, ils parlent très bien anglais et souvent italien. 🗣️";
+          return "On y parle une langue européenne totalement unique qui ne ressemble à aucune autre ! Mais pas de panique, ils parlent très bien anglais. 🗣️";
         }
 
         // TRANSPORTS

@@ -220,14 +220,6 @@
           );
         }
 
-        return (
-          "Désolé, je ne peux pas te répondre !<br>" +
-          "- Soit cela te donnerait trop d'indices.<br>" +
-          "- Soit je n'ai pas la réponse dans mes données.<br>" +
-          "- Soit je n'ai pas compris ta question.<br>" +
-          "Pose-moi une autre question ! 😉"
-        );
-
         // MÉTÉO / CLIMAT
         if (
           q.includes("meteo") ||
@@ -415,6 +407,14 @@
         ) {
           return "Bonne tentative ! Mais je ne peux pas te donner le nom exact de la destination pour ne pas gâcher la surprise. Continue à poser des questions pour deviner ! 🕵️‍♂️";
         }
+
+        return (
+          "Désolé, je ne peux pas te répondre !<br>" +
+          "- Soit cela te donnerait trop d'indices.<br>" +
+          "- Soit je n'ai pas la réponse dans mes données.<br>" +
+          "- Soit je n'ai pas compris ta question.<br>" +
+          "Pose-moi une autre question ! 😉"
+        );
       }
       const targetDate = new Date("2026-10-25T11:45:00").getTime();
 

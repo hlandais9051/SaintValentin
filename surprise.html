@@ -206,6 +206,28 @@
           );
         }
 
+        if (
+          q.includes("bonjour") ||
+          q.includes("salut") ||
+          q.includes("coucou") ||
+          q.includes("hello") ||
+          q.includes("chat")
+        ) {
+          return (
+            "Coucou Mon Coeur ❤️ !<br>" +
+            "Pose-moi une question pour essayer de deviner la destination mystère.<br>" +
+            "Bien sûr, le but n'est pas que tu trouves mais de te donner envie ! 😉"
+          );
+        }
+
+        return (
+          "Désolé, je ne peux pas te répondre !<br>" +
+          "- Soit cela te donnerait trop d'indices.<br>" +
+          "- Soit je n'ai pas la réponse dans mes données.<br>" +
+          "- Soit je n'ai pas compris ta question.<br>" +
+          "Pose-moi une autre question ! 😉"
+        );
+
         // MÉTÉO / CLIMAT
         if (
           q.includes("meteo") ||
@@ -299,7 +321,7 @@
         if (
           q.includes("activite") ||
           q.includes("visiter") ||
-          q.includes("fai") ||
+          (q.includes("fai") && !q.includes("parfait")) ||
           q.includes("feron") ||
           q.includes("voi") ||
           q.includes("verr") ||
@@ -393,29 +415,6 @@
         ) {
           return "Bonne tentative ! Mais je ne peux pas te donner le nom exact de la destination pour ne pas gâcher la surprise. Continue à poser des questions pour deviner ! 🕵️‍♂️";
         }
-
-        // SECRET
-        if (
-          q.includes("bonjour") ||
-          q.includes("salut") ||
-          q.includes("coucou") ||
-          q.includes("hello") ||
-          q.includes("chat")
-        ) {
-          return (
-            "Coucou Mon Coeur ❤️ !<br>" +
-            "Pose-moi une question pour essayer de deviner la destination mystère.<br>" +
-            "Bien sûr, le but n'est pas que tu trouves mais de te donner envie ! 😉"
-          );
-        }
-
-        return (
-          "Désolé, je ne peux pas te répondre !<br>" +
-          "- Soit cela te donnerait trop d'indices.<br>" +
-          "- Soit je n'ai pas la réponse dans mes données.<br>" +
-          "- Soit je n'ai pas compris ta question.<br>" +
-          "Pose-moi une autre question ! 😉"
-        );
       }
       const targetDate = new Date("2026-10-25T11:45:00").getTime();
 

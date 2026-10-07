@@ -61,8 +61,17 @@
         flex-direction: column;
         gap: 10px;
         background-image: url("photo14.png");
-        background-position: center;
+        background-position: left center;
         background-size: cover;
+        animation: defilementFond 15s ease-in-out infinite alternate;
+      }
+      @keyframes defilementFond {
+        0% {
+          background-position: left center;
+        }
+        100% {
+          background-position: right center;
+        }
       }
       .message {
         max-width: 60%;

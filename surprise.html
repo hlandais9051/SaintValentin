@@ -61,16 +61,16 @@
         flex-direction: column;
         gap: 10px;
         background-image: url("photo14.png");
-        background-position: left center;
-        background-size: cover;
-        animation: defilementFond 15s ease-in-out infinite alternate;
+        background-repeat: repeat-x;
+        background-size: auto 100%;
+        animation: defilementContinu 30s linear infinite;
       }
-      @keyframes defilementFond {
+      @keyframes defilementContinu {
         0% {
-          background-position: left center;
+          background-position-x: 0;
         }
         100% {
-          background-position: right center;
+          background-position-x: 209%;
         }
       }
       .message {

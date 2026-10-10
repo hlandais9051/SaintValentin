@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Jeu des Indices — Voyage Mystère</title>
+    <title>Voyage Mystère</title>
     <style>
       body {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -196,7 +196,10 @@
           (q.includes("photo") || q.includes("image")) &&
           (q.includes("appartement") ||
             q.includes("logement") ||
-            q.includes("chambre"))
+            q.includes("chambre") ||
+            q.includes("hebergement") ||
+            q.includes("airbnb") ||
+            q.includes("hotel"))
         ) {
           return (
             "Voici un aperçu de notre petit appartement 🏠<br><br>" +
@@ -363,7 +366,6 @@
           q.includes("airbnb") ||
           q.includes("hotel") ||
           q.includes("chambre") ||
-          q.includes("boho") ||
           q.includes("dorm") ||
           q.includes("dort")
         ) {
